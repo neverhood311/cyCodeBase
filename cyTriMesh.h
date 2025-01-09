@@ -106,7 +106,12 @@ public:
 protected:
 	Vec3f   *v;		//!< vertices
 	TriFace *f;		//!< faces
+<<<<<<< Updated upstream
 	Vec3f   *vn;	//!< vertex normal
+=======
+	Point3f *vn;	//!< vertex normal
+	Point3f *vta;	//!< vertex tangent		JUSTIN
+>>>>>>> Stashed changes
 	TriFace *fn;	//!< normal faces
 	Vec3f   *vt;	//!< texture vertices
 	TriFace *ft;	//!< texture faces
@@ -116,6 +121,7 @@ protected:
 	unsigned int nv;	//!< number of vertices
 	unsigned int nf;	//!< number of faces
 	unsigned int nvn;	//!< number of vertex normals
+	unsigned int nvta;	//!< number of vertex tangents		JUSTIN
 	unsigned int nvt;	//!< number of texture vertices
 	unsigned int nm;	//!< number of materials
 
@@ -125,6 +131,7 @@ protected:
 public:
 
 	//!@name Constructors and Destructor
+<<<<<<< Updated upstream
 	TriMesh() : v(nullptr), f(nullptr), vn(nullptr), fn(nullptr), vt(nullptr), ft(nullptr), m(nullptr), mcfc(nullptr)
 				, nv(0), nf(0), nvn(0), nvt(0), nm(0),boundMin(1,1,1), boundMax(0,0,0) {}
 	TriMesh( TriMesh const &t ) : v(nullptr), f(nullptr), vn(nullptr), fn(nullptr), vt(nullptr), ft(nullptr), m(nullptr), mcfc(nullptr)
@@ -146,17 +153,45 @@ public:
 	TriFace&        FT(int i)       { return ft[i]; }	//!< returns the i^th texture face
 	Mtl const &     M (int i) const { return m[i]; }		//!< returns the i^th material
 	Mtl&            M (int i)       { return m[i]; }		//!< returns the i^th material
+=======
+	TriMesh() : v(nullptr), f(nullptr), vn(nullptr), vta(nullptr), fn(nullptr), vt(nullptr), ft(nullptr), m(nullptr), mcfc(nullptr)
+				, nv(0), nf(0), nvn(0), nvta(0), nvt(0), nm(0),boundMin(1,1,1), boundMax(0,0,0) {}	//JUSTIN
+	TriMesh(const TriMesh &t) : v(nullptr), f(nullptr), vn(nullptr), vta(nullptr), fn(nullptr), vt(nullptr), ft(nullptr), m(nullptr), mcfc(nullptr)
+				, nv(0), nf(0), nvn(0), nvta(0), nvt(0), nm(0),boundMin(1,1,1), boundMax(0,0,0) { *this = t; }	//JUSTIN
+	virtual ~TriMesh() { Clear(); }
+
+	//!@name Component Access Methods
+	const Point3f& V (int i) const { return v[i]; }		//!< returns the i^th vertex
+	Point3f&       V (int i)       { return v[i]; }		//!< returns the i^th vertex
+	const TriFace& F (int i) const { return f[i]; }		//!< returns the i^th face
+	TriFace&       F (int i)       { return f[i]; }		//!< returns the i^th face
+	const Point3f& VN(int i) const { return vn[i]; }	//!< returns the i^th vertex normal
+	Point3f&       VN(int i)       { return vn[i]; }	//!< returns the i^th vertex normal
+	const Point3f& VTA(int i) const {return vta[i]; }	//!< returns the i^th vertex tangent	//JUSTIN
+	Point3f&       VTA(int i)       {return vta[i]; }	//!< returns the i^th vertex tangent	//JUSTIN
+	const TriFace& FN(int i) const { return fn[i]; }	//!< returns the i^th normal face
+	TriFace&       FN(int i)       { return fn[i]; }	//!< returns the i^th normal face
+	const Point3f& VT(int i) const { return vt[i]; }	//!< returns the i^th vertex texture
+	Point3f&       VT(int i)       { return vt[i]; }	//!< returns the i^th vertex texture
+	const TriFace& FT(int i) const { return ft[i]; }	//!< returns the i^th texture face
+	TriFace&       FT(int i)       { return ft[i]; }	//!< returns the i^th texture face
+	const Mtl&     M (int i) const { return m[i]; }		//!< returns the i^th material
+	Mtl&           M (int i)       { return m[i]; }		//!< returns the i^th material
+>>>>>>> Stashed changes
 
 	unsigned int NV () const { return nv; }		//!< returns the number of vertices
 	unsigned int NF () const { return nf; }		//!< returns the number of faces
 	unsigned int NVN() const { return nvn; }	//!< returns the number of vertex normals
+	unsigned int NVTA() const { return nvta; }	//!< returns the number of vertex tangents	//JUSTIN
 	unsigned int NVT() const { return nvt; }	//!< returns the number of texture vertices
 	unsigned int NM () const { return nm; }		//!< returns the number of materials
 
 	bool HasNormals() const { return NVN() > 0; }			//!< returns true if the mesh has vertex normals
+	bool HasTangents() const { return NVTA() > 0; }			//!< returns true if the mesh has vertex tangents	//JUSTIN
 	bool HasTextureVertices() const { return NVT() > 0; }	//!< returns true if the mesh has texture vertices
 
 	//!@name Set Component Count
+<<<<<<< Updated upstream
 	void Clear() { SetNumVertex(0); SetNumFaces(0); SetNumNormals(0); SetNumTexVerts(0); SetNumMtls(0); boundMin.Set(1,1,1); boundMax.Zero(); }	//!< Deletes all components of the mesh
 	void SetNumVertex  ( unsigned int n ) { Allocate(n,v,nv); }															//!< Sets the number of vertices and allocates memory for vertex positions
 	void SetNumFaces   ( unsigned int n ) { Allocate(n,f,nf); if (fn||vn) Allocate(n,fn); if (ft||vt) Allocate(n,ft); }	//!< Sets the number of faces and allocates memory for face data. Normal faces and texture faces are also allocated, if they are used.
@@ -175,10 +210,33 @@ public:
 	int   GetMaterialIndex(int faceID) const;				//!< Returns the material index of the face. This method goes through material counts of all materials to find the material index of the face. Returns a negative number if the face as no material
 	int   GetMaterialFaceCount(int mtlID) const { return mtlID>0 ? mcfc[mtlID]-mcfc[mtlID-1] : mcfc[0]; }	//!< Returns the number of faces associated with the given material ID.
 	int   GetMaterialFirstFace(int mtlID) const { return mtlID>0 ? mcfc[mtlID-1] : 0; }	//!< Returns the first face index associated with the given material ID. Other faces associated with the same material are placed are placed consecutively.
+=======
+	void Clear() { SetNumVertex(0); SetNumFaces(0); SetNumNormals(0); SetNumTangents(0); SetNumTexVerts(0); SetNumMtls(0); boundMin.Set(1,1,1); boundMax.Zero(); }	//!< Deletes all components of the mesh	//JUSTIN
+	void SetNumVertex   (unsigned int n) { Allocate(n,v,nv); }															//!< Sets the number of vertices and allocates memory for vertex positions
+	void SetNumFaces    (unsigned int n) { Allocate(n,f,nf); if (fn||vn) Allocate(n,fn); if (ft||vt) Allocate(n,ft); }	//!< Sets the number of faces and allocates memory for face data. Normal faces and texture faces are also allocated, if they are used.
+	void SetNumNormals  (unsigned int n) { Allocate(n,vn,nvn); Allocate(n==0?0:nf,fn); }									//!< Sets the number of normals and allocates memory for normals and normal faces.
+	void SetNumTangents (unsigned int n) { Allocate(n,vta,nvta); }															//!< Sets the number of tangents and allocates memory for tangents.	//JUSTIN
+	void SetNumTexVerts (unsigned int n) { Allocate(n,vt,nvt); Allocate(n==0?0:nf,ft); }									//!< Sets the number of texture coordinates and allocates memory for texture coordinates and texture faces.
+	void SetNumMtls     (unsigned int n) { Allocate(n,m,nm); Allocate(n,mcfc); }											//!< Sets the number of materials and allocates memory for material data.
+	void operator = (const TriMesh &t);																					//!< Copies mesh data from the given mesh.
+
+	//!@name Get Property Methods
+	bool    IsBoundBoxReady() const { return boundMin.x<=boundMax.x && boundMin.y<=boundMax.y && boundMin.z<=boundMax.z; }	//!< Returns true if the bounding box has been computed.
+	Point3f GetBoundMin() const { return boundMin; }		//!< Returns the minimum values of the bounding box
+	Point3f GetBoundMax() const { return boundMax; }		//!< Returns the maximum values of the bounding box
+	Point3f GetPoint   (int faceID, const Point3f &bc) const { return Interpolate(faceID,v,f,bc); }		//!< Returns the point on the given face with the given barycentric coordinates (bc).
+	Point3f GetNormal  (int faceID, const Point3f &bc) const { return Interpolate(faceID,vn,fn,bc); }	//!< Returns the the surface normal on the given face at the given barycentric coordinates (bc). The returned vector is not normalized.
+	Point3f GetTangent (int faceID, const Point3f &bc) const { return Interpolate(faceID,vta,f,bc); }	//!< Returns the tangent on the given face at the given barycentric coordinates (bc). The returned vector is not normalized.	//JUSTIN
+	Point3f GetTexCoord(int faceID, const Point3f &bc) const { return Interpolate(faceID,vt,ft,bc); }	//!< Returns the texture coordinate on the given face at the given barycentric coordinates (bc).
+	int     GetMaterialIndex(int faceID) const;				//!< Returns the material index of the face. This method goes through material counts of all materials to find the material index of the face. Returns a negative number if the face as no material
+	int     GetMaterialFaceCount(int mtlID) const { return mtlID>0 ? mcfc[mtlID]-mcfc[mtlID-1] : mcfc[0]; }	//!< Returns the number of faces associated with the given material ID.
+	int     GetMaterialFirstFace(int mtlID) const { return mtlID>0 ? mcfc[mtlID-1] : 0; }	//!< Returns the first face index associated with the given material ID. Other faces associated with the same material are placed are placed consecutively.
+>>>>>>> Stashed changes
 
 	//!@name Compute Methods
 	void ComputeBoundingBox();						//!< Computes the bounding box
 	void ComputeNormals(bool clockwise=false);		//!< Computes and stores vertex normals
+	void ComputeTangents(bool clockwise=false);		//!< Computes and stores vertex tangents
 
 	//!@name Load and Save methods
 	bool LoadFromFileObj( char const *filename, bool loadMtl=true, std::ostream *outStream=&std::cout );	//!< Loads the mesh from an OBJ file. Automatically converts all faces to triangles.
@@ -209,6 +267,7 @@ inline void TriMesh::operator = ( TriMesh const &t )
 	Copy( t.v,  t.nv,  v,  nv  );
 	Copy( t.f,  t.nf,  f,  nf  );
 	Copy( t.vn, t.nvn, vn, nvn );
+	Copy( t.vta, t.nvta, vta, nvta );	//JUSTIN
 	Copy( t.fn, t.nf,  fn );
 	Copy( t.vt, t.nvt, vt, nvt );
 	Copy( t.ft, t.nf,  ft );
@@ -261,7 +320,36 @@ inline void TriMesh::ComputeNormals(bool clockwise)
 	for ( unsigned int i=0; i<nvn; i++ ) vn[i].Normalize();
 }
 
+<<<<<<< Updated upstream
 inline bool TriMesh::LoadFromFileObj( char const *filename, bool loadMtl, std::ostream *outStream )
+=======
+inline void TriMesh::ComputeTangents(bool clockwise){	//JUSTIN
+	//if the mesh has no texture coordinates
+	if( nvta == 0 ) return;
+	SetNumTangents(nvta);
+	for ( unsigned int i=0; i<nvta; i++ ) vta[i].Set(0,0,0);	//initialize all vertex tangents to zero
+	//for each face (hopefully the number of faces and the number of texture faces are equal)
+	for ( unsigned int i=0; i<nf; i++ ) {
+		//calculate two edges of the triangle
+		Point3f deltaPos1 = v[f[i].v[1]] - v[f[i].v[0]];
+		Point3f deltaPos2 = v[f[i].v[2]] - v[f[i].v[0]];
+		//calculate two edges of the texture-space triangle
+		Point3f deltaUV1 = vt[ft[i].v[1]] - vt[ft[i].v[0]];
+		Point3f deltaUV2 = vt[ft[i].v[2]] - vt[ft[i].v[0]];
+		//calculate the vertex tangent
+		float r = 1.f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		Point3f T = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+		if( clockwise ) T = -T;
+		vta[f[i].v[0]] += T;
+		vta[f[i].v[1]] += T;
+		vta[f[i].v[2]] += T;
+	}
+	//normalize all vertex tangents
+	for ( unsigned int i=0; i<nvta; i++ ) vta[i].Normalize();
+}
+
+inline bool TriMesh::LoadFromFileObj( const char *filename, bool loadMtl, std::ostream *outStream )
+>>>>>>> Stashed changes
 {
 	FILE *fp = fopen(filename,"r");
 	if ( !fp ) {
